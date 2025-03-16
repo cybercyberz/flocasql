@@ -1,9 +1,8 @@
 module.exports = {
   apps: [{
     name: 'websitecursor',
-    script: './node_modules/.bin/next',
-    args: 'start',
-    cwd: './',
+    script: 'next',
+    cwd: '/home/flocaclo/public_html',
     env: {
       NODE_ENV: 'production',
       PORT: 3000,
