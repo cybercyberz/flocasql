@@ -1,14 +1,15 @@
 module.exports = {
   apps: [{
-    name: 'next-app',
-    script: 'server.js',
+    name: 'websitecursor',
+    script: 'node_modules/next/dist/bin/next',
+    args: 'start',
+    env: {
+      NODE_ENV: 'production',
+    },
+    exec_mode: 'cluster',
     instances: 1,
     autorestart: true,
     watch: false,
-    max_memory_restart: '1G',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 3000
-    }
+    max_memory_restart: '1G'
   }]
 }; 
