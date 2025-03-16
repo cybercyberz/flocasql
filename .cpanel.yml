@@ -1,8 +1,8 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/public_html/
-    - export REPOPATH=/home/repositories/flocasql
+    - export DEPLOYPATH=/home/flocaclo/public_html
+    - export REPOPATH=/home/flocaclo/public_html
     # Reset any local changes and clean untracked files
     - cd $REPOPATH && /usr/local/cpanel/3rdparty/bin/git reset --hard HEAD
     - cd $REPOPATH && /usr/local/cpanel/3rdparty/bin/git clean -f -d
