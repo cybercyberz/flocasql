@@ -24,7 +24,7 @@ export default function CategoryPage() {
         const filteredArticles = allArticles.filter(
           article => 
             article.status === 'published' &&
-            article.category.toLowerCase() === category
+            article.category?.toLowerCase() === category
         );
         setArticles(filteredArticles);
       } catch (err) {
