@@ -2,15 +2,23 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/public_html/
+    - export REPOPATH=/home/repositories/flocasql
+    # Reset any local changes and clean untracked files
+    - cd $REPOPATH && /usr/local/cpanel/3rdparty/bin/git reset --hard HEAD
+    - cd $REPOPATH && /usr/local/cpanel/3rdparty/bin/git clean -f -d
+    # Create deployment directory structure
     - /bin/mkdir -p $DEPLOYPATH
-    - /bin/cp package.json $DEPLOYPATH
-    - /bin/cp server.js $DEPLOYPATH
-    - /bin/cp ecosystem.config.js $DEPLOYPATH
-    - /bin/cp .htaccess $DEPLOYPATH
     - /bin/mkdir -p $DEPLOYPATH/.next
-    - /bin/cp -R .next/* $DEPLOYPATH/.next/
     - /bin/mkdir -p $DEPLOYPATH/public
-    - /bin/cp -R public/* $DEPLOYPATH/public/
     - /bin/mkdir -p $DEPLOYPATH/prisma
-    - /bin/cp -R prisma/* $DEPLOYPATH/prisma/
+    # Copy files
+    - /bin/cp -f package.json $DEPLOYPATH
+    - /bin/cp -f server.js $DEPLOYPATH
+    - /bin/cp -f ecosystem.config.js $DEPLOYPATH
+    - /bin/cp -f .htaccess $DEPLOYPATH
+    # Copy directories
+    - /bin/cp -Rf .next/* $DEPLOYPATH/.next/
+    - /bin/cp -Rf public/* $DEPLOYPATH/public/
+    - /bin/cp -Rf prisma/* $DEPLOYPATH/prisma/
+    # Install dependencies
     - cd $DEPLOYPATH && npm install --production 
