@@ -13,6 +13,7 @@ A modern, responsive news website built with Next.js, TypeScript, and Tailwind C
 - 📱 Mobile-friendly interface
 - 🔐 Admin dashboard for content management
 - ✅ Form validation with Zod
+- 🗄️ PostgreSQL database with Prisma ORM
 
 ## Getting Started
 
@@ -36,36 +37,35 @@ yarn install
      ```
    - Update the variables in `.env.local` with your actual values:
      ```
-     # Firebase Configuration
-     NEXT_PUBLIC_FIREBASE_API_KEY=           # From Firebase Console
-     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=       # From Firebase Console
-     NEXT_PUBLIC_FIREBASE_PROJECT_ID=        # From Firebase Console
-     NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=    # From Firebase Console
-     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID= # From Firebase Console
-     NEXT_PUBLIC_FIREBASE_APP_ID=            # From Firebase Console
+     # PostgreSQL Configuration
+     DATABASE_URL=                          # Your PostgreSQL connection string
 
      # TinyMCE Configuration
-     NEXT_PUBLIC_TINYMCE_API_KEY=           # From TinyMCE Dashboard
+     NEXT_PUBLIC_TINYMCE_API_KEY=          # From TinyMCE Dashboard
 
      # Cloudinary Configuration
-     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=     # From Cloudinary Dashboard
-     NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=  # From Cloudinary Dashboard
+     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=    # From Cloudinary Dashboard
+     NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET= # From Cloudinary Dashboard
 
-     # Firebase Admin (for server-side operations)
-     FIREBASE_ADMIN_EMAIL=                  # Your Firebase Admin email
-     FIREBASE_ADMIN_PASSWORD=               # Your Firebase Admin password
+     # JWT Configuration
+     JWT_SECRET=                           # Your JWT secret key
      ```
 
    Note: Never commit your `.env.local` file to version control!
 
-4. Run the development server:
+4. Set up the database:
+```bash
+npx prisma migrate dev
+```
+
+5. Run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+6. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Project Structure
 
@@ -74,6 +74,7 @@ yarn dev
 - `/src/lib` - Utility functions and validations
 - `/src/types` - TypeScript type definitions
 - `/public` - Static assets
+- `/prisma` - Database schema and migrations
 
 ## Deployment
 
