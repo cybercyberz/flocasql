@@ -84,7 +84,7 @@ export default function FeaturedArticle({ articles, autoplaySpeed = 5000 }: Feat
 
         <Link href={`/articles/${article.id}`} className="block h-full">
           <Image
-            src={article.imageUrl}
+            src={article.imageUrl || '/images/default-article.jpg'}
             alt={article.title}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
