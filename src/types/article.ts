@@ -8,6 +8,7 @@ export interface Article {
   author: string;
   status: 'draft' | 'published';
   featured: boolean;
+  imageUrl?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -21,6 +22,7 @@ export interface ArticleFormData {
   author: string;
   status: 'draft' | 'published';
   featured: boolean;
+  imageUrl?: string;
 }
 
 // For creating a new article, we need everything except the id
