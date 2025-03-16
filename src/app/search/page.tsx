@@ -10,6 +10,7 @@ const mockSearchResults: Article[] = [
   {
     id: '1',
     title: 'The Future of AI in Healthcare',
+    slug: 'the-future-of-ai-in-healthcare',
     excerpt: 'Exploring how artificial intelligence is revolutionizing medical diagnosis and treatment.',
     content: 'Full article content here...',
     category: 'Technology',
@@ -23,6 +24,7 @@ const mockSearchResults: Article[] = [
   {
     id: '2',
     title: 'Global Climate Summit 2024',
+    slug: 'global-climate-summit-2024',
     excerpt: 'World leaders gather to discuss urgent climate action and sustainable solutions.',
     content: 'Full article content here...',
     category: 'Politics',
@@ -36,6 +38,7 @@ const mockSearchResults: Article[] = [
   {
     id: '3',
     title: 'The Rise of Remote Work Culture',
+    slug: 'the-rise-of-remote-work-culture',
     excerpt: 'How companies are adapting to the permanent shift towards flexible work arrangements.',
     content: 'Full article content here...',
     category: 'Business',
