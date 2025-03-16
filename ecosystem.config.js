@@ -1,8 +1,9 @@
 module.exports = {
   apps: [{
     name: 'websitecursor',
-    script: 'node_modules/next/dist/bin/next',
+    script: './node_modules/.bin/next',
     args: 'start',
+    cwd: './',
     env: {
       NODE_ENV: 'production',
       PORT: 3000,
