@@ -17,7 +17,7 @@ model Article {
   excerpt   String?  @db.Text
   slug      String   @unique
   category  String?
-  published Boolean  @default(false)
+  status    String   @default("draft")
   featured  Boolean  @default(false)
   authorId  String
   author    User     @relation(fields: [authorId], references: [id])
