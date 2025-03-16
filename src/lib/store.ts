@@ -13,7 +13,7 @@ const mapPrismaArticleToArticle = (prismaArticle: any): Article => ({
   slug: prismaArticle.slug || prismaArticle.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
   category: prismaArticle.category || '',
   author: prismaArticle.author?.name || '',
-  status: prismaArticle.published ? 'published' : 'draft',
+  status: prismaArticle.status,
   featured: prismaArticle.featured || false,
   imageUrl: prismaArticle.imageUrl || '',
   createdAt: prismaArticle.createdAt,
@@ -47,7 +47,7 @@ export class ArticleStore {
 
       const articles = await prisma.article.findMany({
         where: {
-          published: options.status === 'published',
+          status: options.status || undefined,
           ...(options.featured !== undefined && { featured: options.featured }),
           ...(options.category && { category: options.category })
         },
@@ -108,7 +108,7 @@ export class ArticleStore {
           content: data.content,
           excerpt: data.excerpt,
           category: data.category,
-          published: data.status === 'published',
+          status: data.status,
           featured: data.featured,
           imageUrl: data.imageUrl,
           slug: data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
@@ -142,7 +142,7 @@ export class ArticleStore {
           ...(data.content && { content: data.content }),
           ...(data.excerpt && { excerpt: data.excerpt }),
           ...(data.category && { category: data.category }),
-          ...(data.status && { published: data.status === 'published' }),
+          ...(data.status && { status: data.status }),
           ...(data.featured !== undefined && { featured: data.featured }),
           ...(data.imageUrl && { imageUrl: data.imageUrl }),
           ...(data.author && {
