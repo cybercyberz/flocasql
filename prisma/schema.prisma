@@ -19,6 +19,7 @@ model Article {
   category  String?
   status    String   @default("draft")
   featured  Boolean  @default(false)
+  imageUrl  String?
   authorId  String
   author    User     @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
