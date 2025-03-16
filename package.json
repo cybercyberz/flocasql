@@ -5,24 +5,18 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "pm2 start ecosystem.config.js",
+    "stop": "pm2 stop ecosystem.config.js",
     "lint": "next lint"
   },
   "dependencies": {
-    "@tinymce/tinymce-react": "^6.0.0",
-    "cloudinary": "^1.41.3",
-    "firebase": "^10.14.1",
-    "firebase-admin": "^12.0.0",
+    "@prisma/client": "^5.10.2",
+    "express": "^4.18.2",
     "next": "14.0.4",
-    "next-cloudinary": "^6.16.0",
     "react": "^18",
-    "react-dom": "^18",
-    "react-dropzone": "^14.2.3",
-    "react-hot-toast": "^2.5.2",
-    "zod": "^3.22.4"
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -30,6 +24,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
     "postcss": "^8",
+    "prisma": "^5.10.2",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   },
