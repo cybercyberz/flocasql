@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'websitecursor',
-    script: 'npm',
+    script: 'node_modules/next/dist/bin/next',
     args: 'start',
     env: {
       NODE_ENV: 'production',
@@ -9,7 +9,7 @@ module.exports = {
       NODE_OPTIONS: '--max_old_space_size=512'
     },
     instances: 1,
-    exec_mode: 'cluster',
+    exec_mode: 'fork',
     max_memory_restart: '512M',
     watch: false,
     autorestart: true,
