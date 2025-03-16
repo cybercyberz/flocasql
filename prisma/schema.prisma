@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["public"]
 }
 
 model Article {
@@ -25,6 +26,7 @@ model Article {
   updatedAt DateTime @updatedAt
 
   @@index([authorId])
+  @@schema("public")
 }
 
 model User {
@@ -35,4 +37,6 @@ model User {
   articles  Article[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  @@schema("public")
 } 
