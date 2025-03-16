@@ -11,6 +11,7 @@ const nextConfig = {
         hostname: 'res.cloudinary.com',
       }
     ],
+    unoptimized: true,
   },
   webpack: (config) => {
     // Add polyfills for Node.js core modules
@@ -25,7 +26,10 @@ const nextConfig = {
   experimental: {
     workerThreads: false,
     cpus: 1
-  }
+  },
+  output: 'standalone',
+  basePath: '',
+  trailingSlash: true
 };
 
 module.exports = nextConfig;

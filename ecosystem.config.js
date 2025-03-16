@@ -6,6 +6,7 @@ module.exports = {
     env: {
       NODE_ENV: 'production',
       PORT: 3000,
+      HOST: '0.0.0.0',
       NODE_OPTIONS: '--max_old_space_size=512'
     },
     watch: false,
