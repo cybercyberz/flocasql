@@ -2,10 +2,15 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/public_html/
-    - /bin/cp -R .next $DEPLOYPATH
-    - /bin/cp -R public $DEPLOYPATH
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp package.json $DEPLOYPATH
     - /bin/cp server.js $DEPLOYPATH
     - /bin/cp ecosystem.config.js $DEPLOYPATH
-    - /bin/cp package.json $DEPLOYPATH
     - /bin/cp .htaccess $DEPLOYPATH
-    - /bin/cp prisma $DEPLOYPATH 
+    - /bin/mkdir -p $DEPLOYPATH/.next
+    - /bin/cp -R .next/* $DEPLOYPATH/.next/
+    - /bin/mkdir -p $DEPLOYPATH/public
+    - /bin/cp -R public/* $DEPLOYPATH/public/
+    - /bin/mkdir -p $DEPLOYPATH/prisma
+    - /bin/cp -R prisma/* $DEPLOYPATH/prisma/
+    - cd $DEPLOYPATH && npm install --production 
