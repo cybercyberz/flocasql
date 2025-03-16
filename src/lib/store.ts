@@ -1,7 +1,7 @@
 'use client';
 
 import { Article, ArticleFormData } from '@/types/article';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -10,10 +10,12 @@ const mapPrismaArticleToArticle = (prismaArticle: any): Article => ({
   title: prismaArticle.title,
   content: prismaArticle.content,
   excerpt: prismaArticle.excerpt || '',
+  slug: prismaArticle.slug || prismaArticle.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
   category: prismaArticle.category || '',
   author: prismaArticle.author?.name || '',
   status: prismaArticle.published ? 'published' : 'draft',
   featured: prismaArticle.featured || false,
+  imageUrl: prismaArticle.imageUrl || '',
   createdAt: prismaArticle.createdAt,
   updatedAt: prismaArticle.updatedAt
 });
@@ -108,6 +110,7 @@ export class ArticleStore {
           category: data.category,
           published: data.status === 'published',
           featured: data.featured,
+          imageUrl: data.imageUrl,
           slug: data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
           author: {
             connect: { id: data.author }
@@ -141,6 +144,7 @@ export class ArticleStore {
           ...(data.category && { category: data.category }),
           ...(data.status && { published: data.status === 'published' }),
           ...(data.featured !== undefined && { featured: data.featured }),
+          ...(data.imageUrl && { imageUrl: data.imageUrl }),
           ...(data.author && {
             author: {
               connect: { id: data.author }
