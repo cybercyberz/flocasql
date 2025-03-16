@@ -100,7 +100,7 @@ export default function AdminPage() {
                     {article.imageUrl && (
                       <div className="relative w-16 h-16">
                         <Image
-                          src={article.imageUrl}
+                          src={article.imageUrl || '/images/default-article.jpg'}
                           alt={article.title}
                           fill
                           className="object-cover rounded"

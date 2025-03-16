@@ -80,7 +80,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
         {article.imageUrl && (
           <div className="relative w-full h-96 mb-8">
             <Image
-              src={article.imageUrl}
+              src={article.imageUrl || '/images/default-article.jpg'}
               alt={article.title}
               fill
               className="object-cover rounded-lg"

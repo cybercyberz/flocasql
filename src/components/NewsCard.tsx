@@ -12,7 +12,7 @@ export default function NewsCard({ article }: NewsCardProps) {
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <div className="relative h-48">
           <Image
-            src={article.imageUrl}
+            src={article.imageUrl || '/images/default-article.jpg'}
             alt={article.title}
             fill
             className="object-cover"
