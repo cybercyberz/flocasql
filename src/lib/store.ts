@@ -1,61 +1,27 @@
 'use client';
 
-import { initializeApp } from 'firebase/app';
-import {
-  getFirestore,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  orderBy,
-  limit,
-  DocumentData,
-  QueryDocumentSnapshot,
-  Timestamp
-} from 'firebase/firestore';
 import { Article, ArticleFormData } from '@/types/article';
+import { PrismaClient } from '@prisma/client';
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
-};
+const prisma = new PrismaClient();
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const mapPrismaArticleToArticle = (prismaArticle: any): Article => ({
+  id: prismaArticle.id,
+  title: prismaArticle.title,
+  content: prismaArticle.content,
+  excerpt: prismaArticle.excerpt || '',
+  category: prismaArticle.category || '',
+  author: prismaArticle.author?.name || '',
+  status: prismaArticle.published ? 'published' : 'draft',
+  featured: prismaArticle.featured || false,
+  createdAt: prismaArticle.createdAt,
+  updatedAt: prismaArticle.updatedAt
+});
 
-// This is still a temporary in-memory store, but now it's shared across routes
-// In a production app, this should be replaced with a proper database
 export class ArticleStore {
   private cache: Map<string, Article> = new Map();
   private lastFetch: number = 0;
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-
-  private convertToArticle(doc: QueryDocumentSnapshot<DocumentData>): Article {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      title: data.title,
-      content: data.content,
-      excerpt: data.excerpt,
-      imageUrl: data.imageUrl,
-      category: data.category,
-      author: data.author,
-      status: data.status,
-      featured: data.featured,
-      createdAt: data.createdAt?.toDate() || new Date(),
-      updatedAt: data.updatedAt?.toDate() || new Date()
-    };
-  }
 
   private shouldRefreshCache(): boolean {
     return Date.now() - this.lastFetch > this.CACHE_DURATION;
@@ -74,41 +40,32 @@ export class ArticleStore {
   } = {}): Promise<Article[]> {
     try {
       if (this.lastFetch > 0 && !this.shouldRefreshCache()) {
-        // Return cached articles if they're still fresh
         return Array.from(this.cache.values());
       }
 
-      const articlesRef = collection(db, 'articles');
-      const conditions = [];
+      const articles = await prisma.article.findMany({
+        where: {
+          published: options.status === 'published',
+          ...(options.featured !== undefined && { featured: options.featured }),
+          ...(options.category && { category: options.category })
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        ...(options.limit && { take: options.limit }),
+        include: {
+          author: true
+        }
+      });
 
-      if (options.status) {
-        conditions.push(where('status', '==', options.status));
-      }
-      if (options.featured !== undefined) {
-        conditions.push(where('featured', '==', options.featured));
-      }
-      if (options.category) {
-        conditions.push(where('category', '==', options.category));
-      }
-
-      conditions.push(orderBy('createdAt', 'desc'));
-      
-      if (options.limit) {
-        conditions.push(limit(options.limit));
-      }
-
-      const q = query(articlesRef, ...conditions);
-      const querySnapshot = await getDocs(q);
-      
       this.clearCache();
-      const articles = querySnapshot.docs.map(doc => {
-        const article = this.convertToArticle(doc);
-        this.cache.set(doc.id, article);
-        return article;
+      const mappedArticles = articles.map(mapPrismaArticleToArticle);
+      mappedArticles.forEach(article => {
+        this.cache.set(article.id, article);
       });
 
       this.lastFetch = Date.now();
-      return articles;
+      return mappedArticles;
     } catch (error) {
       console.error('Error fetching articles:', error);
       throw new Error('Failed to fetch articles');
@@ -121,16 +78,20 @@ export class ArticleStore {
     }
 
     try {
-      const docRef = doc(db, 'articles', id);
-      const docSnap = await getDoc(docRef);
+      const article = await prisma.article.findUnique({
+        where: { id },
+        include: {
+          author: true
+        }
+      });
 
-      if (!docSnap.exists()) {
+      if (!article) {
         return null;
       }
 
-      const article = this.convertToArticle(docSnap);
-      this.cache.set(id, article);
-      return article;
+      const mappedArticle = mapPrismaArticleToArticle(article);
+      this.cache.set(id, mappedArticle);
+      return mappedArticle;
     } catch (error) {
       console.error('Error fetching article:', error);
       throw new Error('Failed to fetch article');
@@ -139,22 +100,27 @@ export class ArticleStore {
 
   async createArticle(data: ArticleFormData): Promise<Article> {
     try {
-      const articleData = {
-        ...data,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now()
-      };
+      const article = await prisma.article.create({
+        data: {
+          title: data.title,
+          content: data.content,
+          excerpt: data.excerpt,
+          category: data.category,
+          published: data.status === 'published',
+          featured: data.featured,
+          slug: data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+          author: {
+            connect: { id: data.author }
+          }
+        },
+        include: {
+          author: true
+        }
+      });
 
-      const docRef = await addDoc(collection(db, 'articles'), articleData);
-      const newArticle = {
-        id: docRef.id,
-        ...data,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-
-      this.cache.set(docRef.id, newArticle);
-      return newArticle;
+      const mappedArticle = mapPrismaArticleToArticle(article);
+      this.cache.set(article.id, mappedArticle);
+      return mappedArticle;
     } catch (error) {
       console.error('Error creating article:', error);
       throw new Error('Failed to create article');
@@ -163,32 +129,35 @@ export class ArticleStore {
 
   async updateArticle(id: string, data: Partial<ArticleFormData>): Promise<Article> {
     try {
-      const docRef = doc(db, 'articles', id);
-      const updateData = {
-        ...data,
-        updatedAt: Timestamp.now()
-      };
+      const article = await prisma.article.update({
+        where: { id },
+        data: {
+          ...(data.title && { 
+            title: data.title,
+            slug: data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+          }),
+          ...(data.content && { content: data.content }),
+          ...(data.excerpt && { excerpt: data.excerpt }),
+          ...(data.category && { category: data.category }),
+          ...(data.status && { published: data.status === 'published' }),
+          ...(data.featured !== undefined && { featured: data.featured }),
+          ...(data.author && {
+            author: {
+              connect: { id: data.author }
+            }
+          })
+        },
+        include: {
+          author: true
+        }
+      });
 
-      await updateDoc(docRef, updateData);
-      
-      // Update cache if the article exists in it
+      const mappedArticle = mapPrismaArticleToArticle(article);
       if (this.cache.has(id)) {
-        const existingArticle = this.cache.get(id)!;
-        const updatedArticle = {
-          ...existingArticle,
-          ...data,
-          updatedAt: new Date()
-        };
-        this.cache.set(id, updatedArticle);
-        return updatedArticle;
+        this.cache.set(id, mappedArticle);
       }
 
-      // If not in cache, fetch the updated article
-      const updated = await this.getArticleById(id);
-      if (!updated) {
-        throw new Error('Article not found after update');
-      }
-      return updated;
+      return mappedArticle;
     } catch (error) {
       console.error('Error updating article:', error);
       throw new Error('Failed to update article');
@@ -197,7 +166,9 @@ export class ArticleStore {
 
   async deleteArticle(id: string): Promise<void> {
     try {
-      await deleteDoc(doc(db, 'articles', id));
+      await prisma.article.delete({
+        where: { id }
+      });
       this.cache.delete(id);
     } catch (error) {
       console.error('Error deleting article:', error);
@@ -214,5 +185,4 @@ export class ArticleStore {
   }
 }
 
-// Create and export a singleton instance
 export const articleStore = new ArticleStore(); 
