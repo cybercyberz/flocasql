@@ -1,16 +1,25 @@
 const express = require('express');
+const next = require('next');
 const path = require('path');
-const app = express();
+
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev });
+const handle = app.getRequestHandler();
 const port = process.env.PORT || 3000;
 
-// Serve static files from the .next directory
-app.use(express.static(path.join(__dirname, '.next')));
+app.prepare().then(() => {
+  const server = express();
 
-// Handle all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '.next', 'server', 'pages', req.path));
-});
+  // Serve static files from the .next directory
+  server.use('/_next', express.static(path.join(__dirname, '.next')));
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  // Handle all other routes with Next.js
+  server.all('*', (req, res) => {
+    return handle(req, res);
+  });
+
+  server.listen(port, (err) => {
+    if (err) throw err;
+    console.log(`> Ready on http://localhost:${port}`);
+  });
 }); 
