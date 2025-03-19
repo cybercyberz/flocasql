@@ -3,6 +3,7 @@ module.exports = {
     name: 'websitecursor',
     script: 'npm',
     args: 'start',
+    cwd: '/home/flocaclo/public_html',
     env: {
       NODE_ENV: 'production',
       PORT: 3000,
