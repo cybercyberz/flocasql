@@ -1,1 +1,18 @@
-module.exports = { apps: [{ name: 'websitecursor', script: 'start.js', cwd: '/home/flocaclo/public_html', env: { NODE_ENV: 'production', PORT: 3000 }, instances: 1, exec_mode: 'fork', watch: false, autorestart: true, max_memory_restart: '512M' }] };
+module.exports = {
+  apps: [{
+    name: 'floca',
+    script: 'server.js',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 3000
+    },
+    env_production: {
+      NODE_ENV: 'production',
+      PORT: 3000
+    }
+  }]
+};
