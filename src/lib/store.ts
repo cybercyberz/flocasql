@@ -1,4 +1,4 @@
-﻿import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -19,6 +19,7 @@ interface Article {
   featured: boolean;
   imageUrl?: string;
   authorId: string;
+  author: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,11 +46,12 @@ const mapPrismaArticleToArticle = (prismaArticle: any): Article => ({
   featured: prismaArticle.featured,
   imageUrl: prismaArticle.imageUrl || undefined,
   authorId: prismaArticle.authorId,
+  author: prismaArticle.author?.name || 'Unknown',
   createdAt: prismaArticle.createdAt,
   updatedAt: prismaArticle.updatedAt
 });
 
-export async function getArticles(): Promise<Article[]> {
+async function getArticles(): Promise<Article[]> {
   try {
     const articles = await prisma.article.findMany({
       include: {
@@ -66,7 +68,7 @@ export async function getArticles(): Promise<Article[]> {
   }
 }
 
-export async function getArticleBySlug(slug: string): Promise<Article | null> {
+async function getArticleBySlug(slug: string): Promise<Article | null> {
   try {
     const article = await prisma.article.findUnique({
       where: { slug },
@@ -81,4 +83,68 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
   }
 }
 
-export { Article, ArticleFormData };
+async function getArticleById(id: string): Promise<Article | null> {
+  try {
+    const article = await prisma.article.findUnique({
+      where: { id },
+      include: {
+        author: true
+      }
+    });
+    return article ? mapPrismaArticleToArticle(article) : null;
+  } catch (error) {
+    console.error('Error fetching article by ID:', error);
+    throw new Error('Failed to fetch article');
+  }
+}
+
+async function createArticle(data: ArticleFormData, authorId: string): Promise<Article> {
+  try {
+    const article = await prisma.article.create({
+      data: {
+        ...data,
+        authorId
+      }
+    });
+    return mapPrismaArticleToArticle(article);
+  } catch (error) {
+    console.error('Error creating article:', error);
+    throw new Error('Failed to create article');
+  }
+}
+
+async function updateArticle(id: string, data: ArticleFormData): Promise<Article> {
+  try {
+    const article = await prisma.article.update({
+      where: { id },
+      data
+    });
+    return mapPrismaArticleToArticle(article);
+  } catch (error) {
+    console.error('Error updating article:', error);
+    throw new Error('Failed to update article');
+  }
+}
+
+async function deleteArticle(id: string): Promise<void> {
+  try {
+    await prisma.article.delete({
+      where: { id }
+    });
+  } catch (error) {
+    console.error('Error deleting article:', error);
+    throw new Error('Failed to delete article');
+  }
+}
+
+// Export the articleStore object with all methods
+export const articleStore = {
+  getArticles,
+  getArticleBySlug,
+  getArticleById,
+  createArticle,
+  updateArticle,
+  deleteArticle
+};
+
+export type { Article, ArticleFormData }; 
