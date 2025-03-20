@@ -1,9 +1,9 @@
-'use client';
-
 import { Article, ArticleFormData } from '@/types/article';
 import { PrismaClient, Prisma } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// Singleton PrismaClient instance
+const prisma = global.prisma || new PrismaClient();
+if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
 
 const mapPrismaArticleToArticle = (prismaArticle: any): Article => ({
   id: prismaArticle.id,

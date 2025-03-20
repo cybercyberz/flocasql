@@ -3,16 +3,35 @@ import { ArticleFormData } from '@/types/article';
 import { articleSchema } from '@/lib/validations';
 import { ZodError } from 'zod';
 import { articleStore } from '@/lib/store';
+import { headers } from 'next/headers';
 
 export async function GET() {
   try {
+    const headersList = headers();
     const articles = await articleStore.getArticles();
-    return NextResponse.json(articles);
+    
+    return new NextResponse(JSON.stringify(articles), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, must-revalidate',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
   } catch (error) {
     console.error('Error fetching articles:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch articles', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
+    return new NextResponse(
+      JSON.stringify({
+        error: 'Failed to fetch articles',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store',
+        },
+      }
     );
   }
 }
