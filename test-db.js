@@ -29,7 +29,7 @@ async function testConnection() {
     `);
 
     if (tablesRes.rows.length > 0) {
-      console.log('Tables found:', tablesRes.rows.map(r => r.table_name).join(' '));
+      console.log('Tables found:', tablesRes.rows.map(r => r.table_name).join(', '));
     } else {
       console.log('No tables found in schema');
     }
