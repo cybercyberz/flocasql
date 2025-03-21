@@ -28,7 +28,8 @@ const nextConfig = {
     workerThreads: false,
     cpus: 1
   },
-  output: 'standalone',
+  // Change from 'standalone' to 'export' to disable static page generation
+  output: 'export',
   basePath: '',
   trailingSlash: true
 };
