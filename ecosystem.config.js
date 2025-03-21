@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'websitecursor',
-    script: 'custom-server.js',
+    script: 'start-server.js',
     cwd: '/home/flocaclo/public_html',
     instances: 1,
     exec_mode: 'fork',
