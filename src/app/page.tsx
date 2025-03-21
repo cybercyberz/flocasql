@@ -42,7 +42,7 @@ export default function HomePage() {
   const publishedArticles = filterArticles(articles, selectedCategory);
   // Find all featured articles
   const featuredArticles = publishedArticles.filter(article => article.featured);
-  // If there are no featured articles, use the first article as featured
+  // If there are no featured articles use the first article as featured
   const articlesToShow = featuredArticles.length > 0 ? featuredArticles : publishedArticles.slice(0, 1);
   // Non-featured articles exclude all articles shown in the featured section
   const nonFeaturedArticles = publishedArticles.filter(article => !articlesToShow.includes(article));
@@ -94,7 +94,7 @@ export default function HomePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {articlesToShow.length > 0 && <FeaturedArticle articles={articlesToShow} />}
-      
+
       <div className="mt-12">
         <CategoryFilter
           selectedCategory={selectedCategory}

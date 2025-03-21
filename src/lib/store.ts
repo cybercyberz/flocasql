@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { Article, ArticleFormData } from '@/types/article';
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -8,33 +9,6 @@ declare global {
 const prisma = global.prisma || new PrismaClient();
 if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
 
-interface Article {
-  id: string;
-  title: string;
-  content: string;
-  excerpt?: string;
-  slug: string;
-  category?: string;
-  status: string;
-  featured: boolean;
-  imageUrl?: string;
-  authorId: string;
-  author: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface ArticleFormData {
-  title: string;
-  content: string;
-  excerpt?: string;
-  slug: string;
-  category?: string;
-  status: string;
-  featured: boolean;
-  imageUrl?: string;
-}
-
 const mapPrismaArticleToArticle = (prismaArticle: any): Article => ({
   id: prismaArticle.id,
   title: prismaArticle.title,
@@ -42,7 +16,7 @@ const mapPrismaArticleToArticle = (prismaArticle: any): Article => ({
   excerpt: prismaArticle.excerpt || undefined,
   slug: prismaArticle.slug,
   category: prismaArticle.category || undefined,
-  status: prismaArticle.status,
+  status: prismaArticle.status as 'draft' | 'published',
   featured: prismaArticle.featured,
   imageUrl: prismaArticle.imageUrl || undefined,
   authorId: prismaArticle.authorId,
@@ -100,10 +74,23 @@ async function getArticleById(id: string): Promise<Article | null> {
 
 async function createArticle(data: ArticleFormData, authorId: string): Promise<Article> {
   try {
+    // Create article with proper Prisma structure
     const article = await prisma.article.create({
       data: {
-        ...data,
-        authorId
+        title: data.title,
+        content: data.content,
+        excerpt: data.excerpt,
+        slug: data.slug,
+        category: data.category,
+        status: data.status,
+        featured: data.featured,
+        imageUrl: data.imageUrl,
+        author: {
+          connect: { id: authorId }
+        }
+      },
+      include: {
+        author: true
       }
     });
     return mapPrismaArticleToArticle(article);
@@ -115,9 +102,22 @@ async function createArticle(data: ArticleFormData, authorId: string): Promise<A
 
 async function updateArticle(id: string, data: ArticleFormData): Promise<Article> {
   try {
+    // Update article with proper Prisma structure
     const article = await prisma.article.update({
       where: { id },
-      data
+      data: {
+        title: data.title,
+        content: data.content,
+        excerpt: data.excerpt,
+        slug: data.slug,
+        category: data.category,
+        status: data.status,
+        featured: data.featured,
+        imageUrl: data.imageUrl
+      },
+      include: {
+        author: true
+      }
     });
     return mapPrismaArticleToArticle(article);
   } catch (error) {
@@ -146,5 +146,3 @@ export const articleStore = {
   updateArticle,
   deleteArticle
 };
-
-export type { Article, ArticleFormData }; 
