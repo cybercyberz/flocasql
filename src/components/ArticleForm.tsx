@@ -20,7 +20,8 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ initialData, onSubmit, isSubm
     category: initialData?.category || '',
     author: initialData?.author || '',
     status: initialData?.status || 'draft',
-    featured: initialData?.featured || false
+    featured: initialData?.featured || false,
+    slug: initialData?.slug || ''
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,6 +61,23 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ initialData, onSubmit, isSubm
           required
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
         />
+      </div>
+
+      <div>
+        <label htmlFor="slug" className="block text-sm font-medium text-gray-700">Slug</label>
+        <input
+          type="text"
+          name="slug"
+          id="slug"
+          value={formData.slug}
+          onChange={handleChange}
+          required
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          placeholder="article-url-slug"
+        />
+        <p className="mt-1 text-sm text-gray-500">
+          URL-friendly version of the title (lowercase, hyphens instead of spaces)
+        </p>
       </div>
 
       <div>
@@ -165,4 +183,4 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ initialData, onSubmit, isSubm
 };
 
 export type { ArticleFormProps };
-export default ArticleForm; 
+export default ArticleForm;

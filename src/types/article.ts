@@ -24,6 +24,7 @@ export interface ArticleFormData {
   status: 'draft' | 'published';
   featured: boolean;
   imageUrl?: string;
+  author: string; // Added author field to match the form
 }
 
 // For creating a new article we need everything except the id
