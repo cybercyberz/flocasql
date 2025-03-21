@@ -18,6 +18,7 @@ const mockSearchResults: Article[] = [
     createdAt: new Date('2024-03-15'),
     updatedAt: new Date('2024-03-15'),
     author: 'Dr. Sarah Chen',
+    authorId: 'author1',
     status: 'published',
     featured: false
   },
@@ -32,6 +33,7 @@ const mockSearchResults: Article[] = [
     createdAt: new Date('2024-03-14'),
     updatedAt: new Date('2024-03-14'),
     author: 'James Wilson',
+    authorId: 'author2',
     status: 'published',
     featured: false
   },
@@ -46,6 +48,7 @@ const mockSearchResults: Article[] = [
     createdAt: new Date('2024-03-13'),
     updatedAt: new Date('2024-03-13'),
     author: 'Emma Rodriguez',
+    authorId: 'author3',
     status: 'published',
     featured: false
   }
@@ -91,4 +94,4 @@ export default function SearchPage() {
       </div>
     </div>
   );
-} 
+}
