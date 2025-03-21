@@ -5,14 +5,14 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'picsum.photos',
+        hostname: 'picsum.photos'
       },
       {
         protocol: 'https',
-        hostname: 'res.cloudinary.com',
+        hostname: 'res.cloudinary.com'
       }
     ],
-    unoptimized: true,
+    unoptimized: true
   },
   webpack: (config) => {
     // Add polyfills for Node.js core modules
@@ -20,7 +20,7 @@ const nextConfig = {
       ...config.resolve.fallback,
       fs: false,
       path: false,
-      os: false,
+      os: false
     };
     return config;
   },

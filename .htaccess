@@ -12,11 +12,11 @@ RewriteEngine On
 RewriteCond %{REQUEST_URI} !^/\.well-known/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ http://127.0.0.1:3000/ [P,L]
+RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
 
 # Handle WebSocket connections
 RewriteCond %{HTTP:Upgrade} =websocket [NC]
-RewriteRule ^(.*)$ ws://127.0.0.1:3000/ [P,L]
+RewriteRule ^(.*)$ ws://127.0.0.1:3000/$1 [P,L]
 
 # Set proxy headers
 RequestHeader set X-Real-IP %{REMOTE_ADDR}s
@@ -36,4 +36,4 @@ Header set X-Content-Type-Options 'nosniff'
 Header set X-Frame-Options 'SAMEORIGIN'
 Header set X-XSS-Protection '1; mode=block'
 Header set Referrer-Policy 'strict-origin-when-cross-origin'
-Header set Permissions-Policy 'geolocation=(), microphone=(), camera=()'
+Header set Permissions-Policy 'geolocation=() microphone=() camera=()'
