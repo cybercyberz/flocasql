@@ -30,4 +30,4 @@ export default function NewArticlePage() {
       <ArticleForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
     </div>
   );
-} 
+}

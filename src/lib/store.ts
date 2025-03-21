@@ -72,8 +72,28 @@ async function getArticleById(id: string): Promise<Article | null> {
   }
 }
 
-async function createArticle(data: ArticleFormData, authorId: string): Promise<Article> {
+async function createArticle(data: ArticleFormData, authorId?: string): Promise<Article> {
   try {
+    // If authorId is not provided, try to find an existing user
+    let userId = authorId;
+    if (!userId) {
+      // Try to find the first user in the database
+      const firstUser = await prisma.user.findFirst();
+      if (firstUser) {
+        userId = firstUser.id;
+      } else {
+        // If no user exists, create a default user
+        const defaultUser = await prisma.user.create({
+          data: {
+            email: 'admin@example.com',
+            name: 'Admin',
+            password: 'password' // In a real app, this should be hashed
+          }
+        });
+        userId = defaultUser.id;
+      }
+    }
+
     // Create article with proper Prisma structure
     const article = await prisma.article.create({
       data: {
@@ -86,7 +106,7 @@ async function createArticle(data: ArticleFormData, authorId: string): Promise<A
         featured: data.featured,
         imageUrl: data.imageUrl,
         author: {
-          connect: { id: authorId }
+          connect: { id: userId }
         }
       },
       include: {
