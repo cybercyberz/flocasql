@@ -86,7 +86,7 @@ async function createArticle(data: ArticleFormData, authorId?: string): Promise<
         const defaultUser = await prisma.user.create({
           data: {
             email: 'admin@example.com',
-            name: 'Admin',
+            name: data.author || 'Admin', // Use the author name from the form data if available
             password: 'password' // In a real app, this should be hashed
           }
         });
@@ -122,6 +122,16 @@ async function createArticle(data: ArticleFormData, authorId?: string): Promise<
 
 async function updateArticle(id: string, data: ArticleFormData): Promise<Article> {
   try {
+    // Get the existing article to preserve the authorId
+    const existingArticle = await prisma.article.findUnique({
+      where: { id },
+      select: { authorId: true }
+    });
+
+    if (!existingArticle) {
+      throw new Error('Article not found');
+    }
+
     // Update article with proper Prisma structure
     const article = await prisma.article.update({
       where: { id },
