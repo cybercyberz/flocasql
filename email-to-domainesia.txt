@@ -1,0 +1,71 @@
+Subject: Urgent: Server Process Issues Persisting Despite Cron Job Implementation
+
+[English Version]
+
+Dear DomainEsia Support Team,
+
+I am writing to request urgent assistance with my hosting account. I am experiencing severe server performance issues that are affecting my website's functionality and preventing SSH access.
+
+Issue Details:
+- CPU Usage: 100/100 (100%)
+- Number of Processes: 84/100 (84%)
+- Unable to connect via SSH due to the high process count
+
+Steps Already Taken:
+1. I have implemented the recommended cron jobs to kill stuck Node.js processes:
+   - `pkill -f node >/dev/null 2>&1`
+   - `kill -9 $(ps faux | grep node | grep -v grep | awk {'print $2'})`
+2. These cron jobs are running every hour as suggested
+
+Despite these measures, my server continues to show 100% CPU usage and a high process count (84/100). This indicates that the cron jobs are only partially effective in managing the issue.
+
+I would greatly appreciate if your technical team could:
+1. Investigate the root cause of these persistent high process counts
+2. Manually terminate any stuck processes that the cron jobs are unable to clear
+3. Provide recommendations for a more permanent solution to prevent this from recurring
+4. Consider if there are any server-side optimizations or settings that could help manage Node.js processes more effectively
+
+This is a critical issue for my business, and I would appreciate your prompt attention to this matter.
+
+Thank you for your assistance.
+
+Best regards,
+[Your Name]
+[Your Account ID/Username]
+[Your Domain]
+
+-------------------------------------
+
+[Versi Bahasa Indonesia]
+
+Yth. Tim Support DomainEsia,
+
+Saya menulis untuk meminta bantuan segera terkait akun hosting saya. Saya mengalami masalah performa server yang serius yang mempengaruhi fungsi website saya dan mencegah akses SSH.
+
+Detail Masalah:
+- Penggunaan CPU: 100/100 (100%)
+- Jumlah Proses: 84/100 (84%)
+- Tidak dapat terhubung melalui SSH karena jumlah proses yang tinggi
+
+Langkah yang Sudah Diambil:
+1. Saya telah mengimplementasikan cron job yang direkomendasikan untuk menghentikan proses Node.js yang macet:
+   - `pkill -f node >/dev/null 2>&1`
+   - `kill -9 $(ps faux | grep node | grep -v grep | awk {'print $2'})`
+2. Cron job ini berjalan setiap jam sesuai saran
+
+Meskipun langkah-langkah ini sudah diterapkan, server saya tetap menunjukkan penggunaan CPU 100% dan jumlah proses yang tinggi (84/100). Ini menunjukkan bahwa cron job hanya sebagian efektif dalam mengatasi masalah.
+
+Saya sangat menghargai jika tim teknis Anda dapat:
+1. Menyelidiki akar penyebab dari jumlah proses tinggi yang terus berlanjut ini
+2. Secara manual menghentikan proses-proses yang macet yang tidak dapat dibersihkan oleh cron job
+3. Memberikan rekomendasi untuk solusi yang lebih permanen untuk mencegah masalah ini terulang
+4. Mempertimbangkan apakah ada optimasi sisi server atau pengaturan yang dapat membantu mengelola proses Node.js dengan lebih efektif
+
+Ini adalah masalah kritis untuk bisnis saya, dan saya sangat menghargai perhatian cepat Anda terhadap masalah ini.
+
+Terima kasih atas bantuan Anda.
+
+Hormat saya,
+[Nama Anda]
+[ID Akun/Username Anda]
+[Domain Anda]

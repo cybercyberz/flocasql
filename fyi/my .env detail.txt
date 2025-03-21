@@ -1,0 +1,4 @@
+DATABASE_URL="postgresql://flocaclo_admin:b3owjbzrwaxu@127.0.0.200:5432/flocaclo_nextjs?schema=schemaflo&search_path=schemaflo"
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=dhrhvwwdh
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=cloudinarycursor
+NEXT_PUBLIC_TINYMCE_API_KEY=mcw95z0stxctq9jruqtrvt10afxr3sctzw8o08rednij3n13

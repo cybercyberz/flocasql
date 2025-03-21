@@ -5,10 +5,6 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-// Singleton PrismaClient instance
-const prisma = global.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
-
 const mapPrismaArticleToArticle = (prismaArticle: any): Article => ({
   id: prismaArticle.id,
   title: prismaArticle.title,
@@ -26,6 +22,7 @@ const mapPrismaArticleToArticle = (prismaArticle: any): Article => ({
 });
 
 async function getArticles(): Promise<Article[]> {
+  const prisma = new PrismaClient();
   try {
     const articles = await prisma.article.findMany({
       include: {
@@ -39,10 +36,13 @@ async function getArticles(): Promise<Article[]> {
   } catch (error) {
     console.error('Error fetching articles:', error);
     throw new Error('Failed to fetch articles');
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
 async function getArticleBySlug(slug: string): Promise<Article | null> {
+  const prisma = new PrismaClient();
   try {
     const article = await prisma.article.findUnique({
       where: { slug },
@@ -54,10 +54,13 @@ async function getArticleBySlug(slug: string): Promise<Article | null> {
   } catch (error) {
     console.error('Error fetching article:', error);
     throw new Error('Failed to fetch article');
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
 async function getArticleById(id: string): Promise<Article | null> {
+  const prisma = new PrismaClient();
   try {
     const article = await prisma.article.findUnique({
       where: { id },
@@ -69,10 +72,13 @@ async function getArticleById(id: string): Promise<Article | null> {
   } catch (error) {
     console.error('Error fetching article by ID:', error);
     throw new Error('Failed to fetch article');
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
 async function createArticle(data: ArticleFormData, authorId?: string): Promise<Article> {
+  const prisma = new PrismaClient();
   try {
     // If authorId is not provided, try to find an existing user
     let userId = authorId;
@@ -117,10 +123,13 @@ async function createArticle(data: ArticleFormData, authorId?: string): Promise<
   } catch (error) {
     console.error('Error creating article:', error);
     throw new Error('Failed to create article');
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
 async function updateArticle(id: string, data: ArticleFormData): Promise<Article> {
+  const prisma = new PrismaClient();
   try {
     // Get the existing article to preserve the authorId
     const existingArticle = await prisma.article.findUnique({
@@ -153,10 +162,13 @@ async function updateArticle(id: string, data: ArticleFormData): Promise<Article
   } catch (error) {
     console.error('Error updating article:', error);
     throw new Error('Failed to update article');
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
 async function deleteArticle(id: string): Promise<void> {
+  const prisma = new PrismaClient();
   try {
     await prisma.article.delete({
       where: { id }
@@ -164,6 +176,8 @@ async function deleteArticle(id: string): Promise<void> {
   } catch (error) {
     console.error('Error deleting article:', error);
     throw new Error('Failed to delete article');
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
