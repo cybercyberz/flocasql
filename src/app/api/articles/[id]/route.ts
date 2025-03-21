@@ -34,7 +34,7 @@ export async function PUT(
 ) {
   try {
     const body = await request.json();
-    
+
     // Get the existing article first
     const existingArticle = await articleStore.getArticleById(params.id);
     if (!existingArticle) {
@@ -43,12 +43,12 @@ export async function PUT(
         { status: 404 }
       );
     }
-    
+
     // If slug is not provided in the body, use the existing slug
     if (!body.slug) {
       body.slug = existingArticle.slug;
     }
-    
+
     // Validate the data with the schema
     const validatedData = articleSchema.parse(body);
 

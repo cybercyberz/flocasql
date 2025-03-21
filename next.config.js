@@ -28,10 +28,12 @@ const nextConfig = {
     workerThreads: false,
     cpus: 1
   },
-  // Change from 'standalone' to 'export' to disable static page generation
-  output: 'export',
+  output: 'standalone',
   basePath: '',
-  trailingSlash: true
+  trailingSlash: true,
+  // Disable static page generation for API routes
+  skipTrailingSlashRedirect: true,
+  skipMiddlewareUrlNormalize: true
 };
 
 module.exports = nextConfig;

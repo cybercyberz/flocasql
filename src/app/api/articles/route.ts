@@ -9,14 +9,14 @@ export async function GET() {
   try {
     const headersList = headers();
     const articles = await articleStore.getArticles();
-    
+
     return new NextResponse(JSON.stringify(articles), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-store, must-revalidate',
-        'Access-Control-Allow-Origin': '*',
-      },
+        'Access-Control-Allow-Origin': '*'
+      }
     });
   } catch (error) {
     console.error('Error fetching articles:', error);
@@ -29,8 +29,8 @@ export async function GET() {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 'no-store',
-        },
+          'Cache-Control': 'no-store'
+        }
       }
     );
   }
@@ -40,15 +40,15 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     console.log('Received article data:', body);
-    
+
     // Validate the request body
     try {
       const validatedData = articleSchema.parse(body);
       console.log('Validation successful:', validatedData);
-      
+
       // ArticleStore.createArticle now handles timestamps
       const createdArticle = await articleStore.createArticle(validatedData);
-      
+
       console.log('Article created successfully:', createdArticle);
       return NextResponse.json(createdArticle, { status: 201 });
     } catch (validationError) {
@@ -68,4 +68,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-} 
+}
