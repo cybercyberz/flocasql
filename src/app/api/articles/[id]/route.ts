@@ -10,7 +10,7 @@ export async function GET(
 ) {
   try {
     const article = await articleStore.getArticleById(params.id);
-    
+
     if (!article) {
       return NextResponse.json(
         { error: 'Article not found' },
@@ -34,8 +34,8 @@ export async function PUT(
 ) {
   try {
     const body = await request.json();
-    const validatedData = articleSchema.parse(body);
-
+    
+    // Get the existing article first
     const existingArticle = await articleStore.getArticleById(params.id);
     if (!existingArticle) {
       return NextResponse.json(
@@ -43,11 +43,16 @@ export async function PUT(
         { status: 404 }
       );
     }
+    
+    // If slug is not provided in the body, use the existing slug
+    if (!body.slug) {
+      body.slug = existingArticle.slug;
+    }
+    
+    // Validate the data with the schema
+    const validatedData = articleSchema.parse(body);
 
-    await articleStore.updateArticle(params.id, {
-      ...validatedData,
-      // No need to set createdAt as it will be preserved by the store
-    });
+    await articleStore.updateArticle(params.id, validatedData);
 
     return NextResponse.json({ message: 'Article updated successfully' });
   } catch (error) {
@@ -71,7 +76,7 @@ export async function DELETE(
 ) {
   try {
     await articleStore.deleteArticle(params.id);
-    
+
     return NextResponse.json({ message: 'Article deleted successfully' });
   } catch (error) {
     console.error('Error deleting article:', error);
@@ -80,4 +85,4 @@ export async function DELETE(
       { status: 500 }
     );
   }
-} 
+}

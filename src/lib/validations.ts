@@ -17,4 +17,8 @@ export const articleSchema = z.object({
     .max(50, 'Author name must be less than 50 characters'),
   status: z.enum(['draft', 'published']),
   featured: z.boolean().default(false),
-}); 
+  slug: z.string()
+    .min(3, 'Slug must be at least 3 characters')
+    .max(100, 'Slug must be less than 100 characters')
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
+});
