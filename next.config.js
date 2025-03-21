@@ -22,7 +22,6 @@ const nextConfig = {
       path: false,
       os: false
     };
-    config.plugins.push(new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)());
     return config;
   },
   experimental: {
