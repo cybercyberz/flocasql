@@ -7,11 +7,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "floca.id - Your Daily News Source",
-  description: "Stay informed with the latest news and stories from around the world.",
+  description: "Stay informed with the latest news and stories from around the world."
 };
 
 export default function RootLayout({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
