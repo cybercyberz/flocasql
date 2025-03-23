@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - floca.id</title>
+  <style>
+    :root {
+      --primary-color: #0066cc;
+      --secondary-color: #333333;
+      --accent-color: #4CAF50;
+      --text-color: #333;
+      --background-color: #f4f4f4;
+      --card-background: #fff;
+      --header-background: #333;
+      --header-text: #fff;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      color: var(--text-color);
+      background-color: var(--background-color);
+    }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      background-color: var(--header-background);
+      color: var(--header-text);
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+    .user-info span {
+      margin-right: 15px;
+    }
+    .logout-btn {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-bottom: none;
+      margin-right: 5px;
+      border-radius: 5px 5px 0 0;
+    }
+    .tab.active {
+      background-color: #fff;
+      border-bottom: 1px solid #fff;
+      margin-bottom: -1px;
+    }
+    .tab-content {
+      display: none;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 0 0 5px 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .tab-content.active {
+      display: block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    table th, table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    table th {
+      background-color: #f2f2f2;
+    }
+    .action-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+    .edit-btn {
+      background-color: #2196F3;
+      color: white;
+    }
+    .delete-btn {
+      background-color: #f44336;
+      color: white;
+    }
+    .add-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="url"],
+    input[type="color"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    textarea {
+      height: 150px;
+      resize: vertical;
+    }
+    .checkbox-group {
+      margin-top: 10px;
+    }
+    .checkbox-group label {
+      display: inline;
+      font-weight: normal;
+      margin-left: 5px;
+    }
+    .submit-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .cancel-btn {
+      background-color: #f44336;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .error-message {
+      color: #f44336;
+      margin-top: 15px;
+      display: none;
+    }
+    .success-message {
+      color: #4CAF50;
+      margin-top: 15px;
+      display: none;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 700px;
+      border-radius: 5px;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .loading {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    /* Settings styles */
+    .settings-section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    .color-picker-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .color-picker-group label {
+      width: 150px;
+      margin-bottom: 0;
+      margin-right: 10px;
+    }
+    .color-picker-group input[type="color"] {
+      width: 50px;
+      height: 30px;
+      padding: 0;
+      border: none;
+    }
+    .logo-preview {
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      background-color: var(--header-background);
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .logo-preview img {
+      max-height: 40px;
+      margin-right: 10px;
+    }
+    .logo-preview span {
+      color: var(--header-text);
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="dashboard-title">floca.id Admin Dashboard</h1>
+    <div class="user-info">
+      <span id="username">Admin</span>
+      <button id="logout-btn" class="logout-btn">Logout</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" data-tab="articles">Articles</div>
+      <div class="tab" data-tab="settings">Settings</div>
+    </div>
+
+    <div id="articles-tab" class="tab-content active">
+      <button id="add-article-btn" class="add-btn">Add New Article</button>
+      <div id="articles-loading" class="loading">Loading articles...</div>
+      <div id="articles-error" class="error-message"></div>
+      <table id="articles-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Featured</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="articles-list">
+          <!-- Articles will be loaded here -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="settings-tab" class="tab-content">
+      <h2>Website Settings</h2>
+      
+      <form id="settings-form">
+        <div class="settings-section">
+          <h3>General Settings</h3>
+          <div class="form-group">
+            <label for="site-name">Website Name</label>
+            <input type="text" id="site-name" name="siteName" value="floca.id" required>
+          </div>
+        </div>
+        
+        <div class="settings-section">
+          <h3>Logo Settings</h3>
+          <div class="form-group">
+            <label for="logo-url">Logo URL</label>
+            <input type="url" id="logo-url" name="logoUrl" placeholder="Enter logo URL">
+          </div>
+          <div class="logo-preview">
+            <img id="logo-preview-img" src="/images/default-logo.png" alt="Logo Preview">
+            <span id="logo-preview-text">floca.id</span>
+          </div>
+        </div>
+        
+        <div class="settings-section">
+          <h3>Theme Settings</h3>
+          <div class="color-picker-group">
+            <label for="primary-color">Primary Color</label>
+            <input type="color" id="primary-color" name="primaryColor" value="#0066cc">
+          </div>
+          <div class="color-picker-group">
+            <label for="secondary-color">Secondary Color</label>
+            <input type="color" id="secondary-color" name="secondaryColor" value="#333333">
+          </div>
+          <div class="color-picker-group">
+            <label for="accent-color">Accent Color</label>
+            <input type="color" id="accent-color" name="accentColor" value="#4CAF50">
+          </div>
+          <div class="form-group">
+            <label for="font-family">Font Family</label>
+            <select id="font-family" name="fontFamily">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="'Helvetica Neue', Helvetica, sans-serif">Helvetica</option>
+              <option value="'Times New Roman', Times, serif">Times New Roman</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="'Courier New', Courier, monospace">Courier New</option>
+              <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Segoe UI</option>
+              <option value="Roboto, Arial, sans-serif">Roboto</option>
+              <option value="'Open Sans', Arial, sans-serif">Open Sans</option>
+            </select>
+          </div>
+        </div>
+        
+        <div id="settings-error" class="error-message"></div>
+        <div id="settings-success" class="success-message"></div>
+        <button type="submit" class="submit-btn">Save Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add/Edit Article Modal -->
+  <div id="article-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="modal-title">Add New Article</h2>
+      <form id="article-form">
+        <input type="hidden" id="article-id">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+          <label for="slug">Slug</label>
+          <input type="text" id="slug" name="slug" required>
+        </div>
+        <div class="form-group">
+          <label for="excerpt">Excerpt</label>
+          <textarea id="excerpt" name="excerpt"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="content">Content</label>
+          <textarea id="content" name="content" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" name="category">
+            <option value="Uncategorized">Uncategorized</option>
+            <option value="News">News</option>
+            <option value="Technology">Technology</option>
+            <option value="Business">Business</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Sports">Sports</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="imageUrl">Image URL</label>
+          <input type="url" id="imageUrl" name="imageUrl">
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="featured" name="featured">
+          <label for="featured">Featured Article</label>
+        </div>
+        <div id="form-error" class="error-message"></div>
+        <div id="form-success" class="success-message"></div>
+        <button type="submit" class="submit-btn">Save Article</button>
+        <button type="button" class="cancel-btn" id="cancel-btn">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const articlesTable = document.getElementById('articles-table');
+    const articlesList = document.getElementById('articles-list');
+    const articlesLoading = document.getElementById('articles-loading');
+    const articlesError = document.getElementById('articles-error');
+    const addArticleBtn = document.getElementById('add-article-btn');
+    const articleModal = document.getElementById('article-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const articleForm = document.getElementById('article-form');
+    const articleIdInput = document.getElementById('article-id');
+    const closeBtn = document.querySelector('.close');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const formError = document.getElementById('form-error');
+    const formSuccess = document.getElementById('form-success');
+    const logoutBtn = document.getElementById('logout-btn');
+    const usernameElement = document.getElementById('username');
+    const settingsForm = document.getElementById('settings-form');
+    const settingsError = document.getElementById('settings-error');
+    const settingsSuccess = document.getElementById('settings-success');
+    
+    // Tab switching
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+      });
+    });
+    
+    // Load articles
+    async function loadArticles() {
+      try {
+        const response = await fetch('/api/articles');
+        const articles = await response.json();
+        
+        if (!Array.isArray(articles)) {
+          throw new Error('Invalid response format');
+        }
+        
+        articlesList.innerHTML = '';
+        
+        articles.forEach(article => {
+          const row = document.createElement('tr');
+          const date = new Date(article.createdAt);
+          const formattedDate = date.toLocaleDateString();
+          
+          row.innerHTML = `
+            <td>${article.title}</td>
+            <td>${article.category || 'Uncategorized'}</td>
+            <td>${article.status}</td>
+            <td>${article.featured ? 'Yes' : 'No'}</td>
+            <td>${formattedDate}</td>
+            <td>
+              <button class="action-btn edit-btn" data-id="${article.id}">Edit</button>
+              <button class="action-btn delete-btn" data-id="${article.id}">Delete</button>
+            </td>
+          `;
+          
+          articlesList.appendChild(row);
+        });
+        
+        articlesLoading.style.display = 'none';
+        articlesTable.style.display = 'table';
+        
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.addEventListener('click', () => editArticle(btn.dataset.id));
+        });
+        
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', () => deleteArticle(btn.dataset.id));
+        });
+      } catch (error) {
+        console.error('Error loading articles:', error);
+        articlesError.textContent = 'Failed to load articles. Please try again.';
+        articlesError.style.display = 'block';
+      }
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadArticles();
+    });
+  </script>
+</body>
+</html>

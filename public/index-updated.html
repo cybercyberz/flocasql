@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>floca.id - News Portal</title>
+  <style>
+    :root {
+      --primary-color: #0066cc;
+      --secondary-color: #333333;
+      --accent-color: #4CAF50;
+      --text-color: #333;
+      --background-color: #f9f9f9;
+      --card-background: #fff;
+      --header-background: #333;
+      --header-text: #fff;
+      --footer-background: #333;
+      --footer-text: #fff;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      color: var(--text-color);
+      background-color: var(--background-color);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    header {
+      background-color: var(--header-background);
+      color: var(--header-text);
+      padding: 20px 0;
+      margin-bottom: 30px;
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+      color: var(--header-text);
+      display: flex;
+      align-items: center;
+    }
+    .logo img {
+      max-height: 40px;
+      margin-right: 10px;
+    }
+    nav ul {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    nav ul li {
+      margin-left: 20px;
+    }
+    nav ul li a {
+      color: var(--header-text);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    nav ul li a:hover {
+      color: #ddd;
+    }
+    .hero {
+      background-color: var(--card-background);
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    .hero h1 {
+      margin-top: 0;
+      color: var(--text-color);
+    }
+    .hero p {
+      font-size: 18px;
+      color: #666;
+    }
+    
+    /* Featured Articles Slideshow */
+    .featured-slideshow {
+      position: relative;
+      margin-bottom: 40px;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .featured-slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    .featured-slide {
+      min-width: 100%;
+      position: relative;
+    }
+    .featured-slide-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+    .featured-slide-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      color: white;
+    }
+    .featured-slide-title {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+    .featured-slide-title a {
+      color: white;
+      text-decoration: none;
+    }
+    .featured-slide-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .featured-slide-excerpt {
+      margin-bottom: 15px;
+    }
+    .featured-nav {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+    .featured-nav button {
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 10px;
+      transition: background-color 0.3s;
+    }
+    .featured-nav button:hover {
+      background-color: rgba(0,0,0,0.8);
+    }
+    .featured-indicators {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      z-index: 1;
+    }
+    .featured-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.5);
+      margin: 0 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .featured-indicator.active {
+      background-color: white;
+    }
+    
+    .articles {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    .article {
+      background-color: var(--card-background);
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .article:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .article-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .article-content {
+      padding: 20px;
+    }
+    .article-title {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+    .article-title a {
+      color: var(--text-color);
+      text-decoration: none;
+    }
+    .article-title a:hover {
+      color: var(--primary-color);
+    }
+    .article-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .article-excerpt {
+      color: #555;
+      margin-bottom: 15px;
+    }
+    .read-more {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+    .read-more:hover {
+      background-color: #0052a3;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+      color: #777;
+    }
+    .error {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 30px;
+    }
+    .admin-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #666;
+      text-decoration: none;
+    }
+    .admin-link:hover {
+      text-decoration: underline;
+    }
+    footer {
+      background-color: var(--footer-background);
+      color: var(--footer-text);
+      padding: 30px 0;
+      margin-top: 50px;
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+    }
+    .footer-section {
+      flex: 1;
+      margin-right: 30px;
+    }
+    .footer-section:last-child {
+      margin-right: 0;
+    }
+    .footer-section h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: var(--footer-text);
+    }
+    .footer-section p {
+      color: #ddd;
+    }
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .footer-section ul li {
+      margin-bottom: 10px;
+    }
+    .footer-section ul li a {
+      color: #ddd;
+      text-decoration: none;
+    }
+    .footer-section ul li a:hover {
+      color: var(--footer-text);
+    }
+    .copyright {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #444;
+      color: #ddd;
+    }
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      nav ul {
+        margin-top: 15px;
+        justify-content: center;
+      }
+      nav ul li {
+        margin: 0 10px;
+      }
+      .featured-slide-image {
+        height: 300px;
+      }
+      .articles {
+        grid-template-columns: 1fr;
+      }
+      .footer-content {
+        flex-direction: column;
+      }
+      .footer-section {
+        margin-right: 0;
+        margin-bottom: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="/" class="logo" id="site-logo">
+          <img src="/images/default-logo.png" alt="floca.id" id="logo-image">
+          <span id="site-name">floca.id</span>
+        </a>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="hero">
+      <h1>Welcome to floca.id!</h1>
+      <p>Stay updated with the latest news and articles from around the world.</p>
+    </div>
+
+    <!-- Featured Articles Slideshow -->
+    <div id="featured-container">
+      <div class="loading">Loading featured articles...</div>
+    </div>
+
+    <div id="articles-container">
+      <div class="loading">Loading articles...</div>
+    </div>
+
+    <a href="/login" class="admin-link">Admin Login</a>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>About Us</h3>
+          <p>floca.id is a news portal that provides the latest news and articles from around the world.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="/login">Admin</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: info@floca.id</p>
+          <p>Phone: +1 234 567 890</p>
+        </div>
+      </div>
+      <div class="copyright">
+        &copy; 2025 floca.id. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Function to fetch site configuration
+    async function fetchSiteConfig() {
+      try {
+        const response = await fetch('/api/config');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch site configuration');
+        }
+        
+        const config = await response.json();
+        
+        // Update site name
+        document.title = `${config.siteName} - News Portal`;
+        document.getElementById('site-name').textContent = config.siteName;
+        
+        // Update logo
+        document.getElementById('logo-image').src = config.logo;
+        
+        // Update theme colors
+        document.documentElement.style.setProperty('--primary-color', config.theme.primaryColor);
+        document.documentElement.style.setProperty('--secondary-color', config.theme.secondaryColor);
+        document.documentElement.style.setProperty('--accent-color', config.theme.accentColor);
+        
+        // Update font family
+        document.body.style.fontFamily = config.theme.fontFamily;
+      } catch (error) {
+        console.error('Error fetching site configuration:', error);
+        // Use default configuration
+      }
+    }
+    
+    // Function to fetch featured articles
+    async function fetchFeaturedArticles() {
+      const featuredContainer = document.getElementById('featured-container');
+      
+      try {
+        const response = await fetch('/api/featured-articles');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch featured articles');
+        }
+        
+        const articles = await response.json();
+        
+        if (!Array.isArray(articles) || articles.length === 0) {
+          featuredContainer.style.display = 'none';
+          return;
+        }
+        
+        // Create HTML for featured articles slideshow
+        const slideshowHTML = `
+          <div class="featured-slideshow">
+            <div class="featured-slides" id="featured-slides">
+              ${articles.map((article, index) => `
+                <div class="featured-slide" data-index="${index}">
+                  <img src="${article.imageUrl || 'https://picsum.photos/800/400?random=' + index}" alt="${article.title}" class="featured-slide-image">
+                  <div class="featured-slide-content">
+                    <h2 class="featured-slide-title"><a href="/article/${article.slug}">${article.title}</a></h2>
+                    <div class="featured-slide-meta">
+                      <span>${article.category || 'Uncategorized'}</span>
+                      <span>${new Date(article.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <p class="featured-slide-excerpt">${article.excerpt || article.content.substring(0, 150)}...</p>
+                    <a href="/article/${article.slug}" class="read-more">Read More</a>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="featured-nav">
+              <button id="prev-slide">&lt;</button>
+              <button id="next-slide">&gt;</button>
+            </div>
+            <div class="featured-indicators" id="featured-indicators">
+              ${articles.map((_, index) => `
+                <div class="featured-indicator ${index === 0 ? 'active' : ''}" data-index="${index}"></div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        
+        featuredContainer.innerHTML = slideshowHTML;
+        
+        // Initialize slideshow
+        initSlideshow(articles.length);
+      } catch (error) {
+        console.error('Error fetching featured articles:', error);
+        featuredContainer.style.display = 'none';
+      }
+    }
+    
+    // Function to initialize slideshow
+    function initSlideshow(slideCount) {
+      if (slideCount <= 1) return;
+      
+      const slidesContainer = document.getElementById('featured-slides');
+      const indicators = document.querySelectorAll('.featured-indicator');
+      const prevButton = document.getElementById('prev-slide');
+      const nextButton = document.getElementById('next-slide');
+      
+      let currentSlide = 0;
+      let slideInterval;
+      
+      // Function to show a specific slide
+      function showSlide(index) {
+        currentSlide = index;
+        
+        // Update slides position
+        slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+        
+        // Update indicators
+        indicators.forEach((indicator, i) => {
+          indicator.classList.toggle('active', i === currentSlide);
+        });
+      }
+      
+      // Function to show next slide
+      function nextSlide() {
+        currentSlide = (currentSlide + 1) % slideCount;
+        showSlide(currentSlide);
+      }
+      
+      // Function to show previous slide
+      function prevSlide() {
+        currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+        showSlide(currentSlide);
+      }
+      
+      // Add event listeners
+      prevButton.addEventListener('click', () => {
+        prevSlide();
+        resetInterval();
+      });
+      
+      nextButton.addEventListener('click', () => {
+        nextSlide();
+        resetInterval();
+      });
+      
+      // Add event listeners to indicators
+      indicators.forEach(indicator => {
+        indicator.addEventListener('click', () => {
+          const index = parseInt(indicator.dataset.index);
+          showSlide(index);
+          resetInterval();
+        });
+      });
+      
+      // Function to reset interval
+      function resetInterval() {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 5000);
+      }
+      
+      // Start slideshow
+      resetInterval();
+    }
+    
+    // Function to fetch articles from the API
+    async function fetchArticles() {
+      const articlesContainer = document.getElementById('articles-container');
+      
+      try {
+        const response = await fetch('/api/articles');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch articles');
+        }
+        
+        const articles = await response.json();
+        
+        if (!Array.isArray(articles) || articles.length === 0) {
+          articlesContainer.innerHTML = '<p>No articles found.</p>';
+          return;
+        }
+        
+        // Create HTML for articles
+        const articlesHTML = `
+          <h2>Latest Articles</h2>
+          <div class="articles">
+            ${articles.map(article => `
+              <div class="article">
+                ${article.imageUrl ? `<img src="${article.imageUrl}" alt="${article.title}" class="article-image">` : ''}
+                <div class="article-content">
+                  <h2 class="article-title"><a href="/article/${article.slug}">${article.title}</a></h2>
+                  <div class="article-meta">
+                    <span>${article.category || 'Uncategorized'}</span>
+                    <span>${new Date(article.createdAt).toLocaleDateString()}</span>
+                  </div>
+                  <p class="article-excerpt">${article.excerpt || article.content.substring(0, 150)}...</p>
+                  <a href="/article/${article.slug}" class="read-more">Read More</a>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        
+        articlesContainer.innerHTML = articlesHTML;
+      } catch (error) {
+        console.error('Error fetching articles:', error);
+        articlesContainer.innerHTML = `
+          <div class="error">
+            <strong>Error:</strong> Failed to load articles. Please try again later.
+          </div>
+        `;
+      }
+    }
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchSiteConfig();
+      fetchFeaturedArticles();
+      fetchArticles();
+    });
+  </script>
+</body>
+</html>
